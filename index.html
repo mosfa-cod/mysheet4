@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>منصة الاختبارات الذكية</title>
     <style>
-        body { font-family: sans-serif; text-align: center;  : 20px; background-color: #f4f7f6; }
+        body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f4f7f6; }
         .card { border: 2px solid #ddd; padding: 25px; border-radius: 15px; max-width: 500px; margin: auto; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         select, button, input { display: block; width: 100%; margin: 10px 0; padding: 15px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; }
         button { background-color: #28a745; color: white; border: none; cursor: pointer; }
@@ -37,7 +37,7 @@
     let currentFiltered = [];
     let score = 0;
 
-    // رابط الأسئلة الخاص بك
+    // رابط الأسئلة (تأكد أن هذا الرابط يعمل بـ doGet)
     const questionsApiUrl = 'https://script.google.com/macros/s/AKfycbzdtDgHPvExdBs5XJDMLbirge9ltEylsZLFpEDCT4cG3F21cgtgLA6HKFhnPcBYU-Ufyw/exec';
 
     fetch(questionsApiUrl)
@@ -79,24 +79,24 @@
             btnDiv.appendChild(b);
         });
     }
- function sendResult(name, s, total) {
-    // استخدم الرابط الجديد هنا
-    const url = "https://script.google.com/macros/s/AKfycbzdtDgHPvExdBs5XJDMLbirge9ltEylsZLFpEDCT4cG3F21cgtgLA6HKFhnPcBYU-Ufyw/exec";
-    
-    fetch(url, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            name: name,
-            score: s + "/" + total,
-            subject: document.getElementById('subject').value
-        })
-    }).then(() => {
-        alert("تم تسجيل درجتك بنجاح!");
-        location.reload();
-    });
-}
+
+    function sendResult(name, s, total) {
+        // رابط النتائج (تأكد أن هذا الرابط يعمل بـ doPost)
+        const url = "https://script.google.com/macros/s/AKfycbzdtDgHPvExdBs5XJDMLbirge9ltEylsZLFpEDCT4cG3F21cgtgLA6HKFhnPcBYU-Ufyw/exec";
+        
+        fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: name,
+                score: s + "/" + total,
+                subject: document.getElementById('subject').value
+            })
+        }).then(() => {
+            alert("تم تسجيل درجتك بنجاح!");
+            location.reload();
+        });
     }
     </script>
 </body>
