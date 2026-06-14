@@ -79,25 +79,24 @@
             btnDiv.appendChild(b);
         });
     }
-
-    function sendResult(name, s, total) {
-        // رابط النتائج (Apps Script)
-        const url = "https://script.google.com/macros/s/AKfycbwr5KPoe5lzi7JULLkErWkxJk02KclOme3qlMCTBknl1MJTcKArMPV6wzYjnm6VXNC6/exec";
-        
-        // إرسال البيانات بطريقة no-cors لتجاوز مشكلة المتصفح
-        fetch(url, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                name: name,
-                score: s + "/" + total,
-                subject: document.getElementById('subject').value
-            })
-        }).then(() => {
-            alert("تم تسجيل درجتك بنجاح!");
-            location.reload();
-        });
+ function sendResult(name, s, total) {
+    // استخدم الرابط الجديد هنا
+    const url = "https://script.google.com/macros/s/AKfycbzdtDgHPvExdBs5XJDMLbirge9ltEylsZLFpEDCT4cG3F21cgtgLA6HKFhnPcBYU-Ufyw/exec";
+    
+    fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            name: name,
+            score: s + "/" + total,
+            subject: document.getElementById('subject').value
+        })
+    }).then(() => {
+        alert("تم تسجيل درجتك بنجاح!");
+        location.reload();
+    });
+}
     }
     </script>
 </body>
