@@ -107,7 +107,8 @@ document.querySelector('button, input[type="button"]').addEventListener('click',
     
     if (nameInput.trim() !== "") {
         // استدعاء دالة الإرسال مع تمرير الاسم، درجة صفر (لأنه لا يوجد اختبار)، والمادة
-        sendResult(nameInput, "0", subjectSelect); 
+      sendResult(nameInput, subjectSelect, "0");
+
         alert("جاري ترحيل البيانات إلى الجدول...");
     } else {
         alert("من فضلك اكتب اسمك أولاً يا بطل!");
