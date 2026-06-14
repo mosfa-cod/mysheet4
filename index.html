@@ -97,7 +97,23 @@
             alert("تم تسجيل درجتك بنجاح!");
             location.reload();
         });
+     
     }
+     // ربط الزر الأخضر ليرسل البيانات مباشرة عند الضغط عليه
+document.querySelector('button, input[type="button"]').addEventListener('click', function() {
+    const nameInput = document.querySelector('input[type="text"]').value;
+    const subjectSelect = document.querySelectorAll('select')[0].value; // المادة
+    const gradeSelect = document.querySelectorAll('select')[1].value;   // الصف أو المادة البديلة
+    
+    if (nameInput.trim() !== "") {
+        // استدعاء دالة الإرسال مع تمرير الاسم، درجة صفر (لأنه لا يوجد اختبار)، والمادة
+        sendResult(nameInput, "0", subjectSelect); 
+        alert("جاري ترحيل البيانات إلى الجدول...");
+    } else {
+        alert("من فضلك اكتب اسمك أولاً يا بطل!");
+    }
+});
+
     </script>
 </body>
 </html>
