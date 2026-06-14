@@ -1,0 +1,104 @@
+ <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>منصة الاختبارات الذكية</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f4f7f6; }
+        .card { border: 2px solid #ddd; padding: 25px; border-radius: 15px; max-width: 500px; margin: auto; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        select, button, input { display: block; width: 100%; margin: 10px 0; padding: 15px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="selection-div">
+        <h2>أهلاً بك يا بطل</h2>
+        <input type="text" id="studentName" placeholder="اكتب اسمك هنا">
+        <select id="subject">
+            <option value="الرياضيات">الرياضيات</option>
+            <option value="اللغة العربية">اللغة العربية</option>
+        </select>
+        <select id="grade">
+            <option value="أولى إعدادي">أولى إعدادي</option>
+            <option value="ثانية إعدادي">ثانية إعدادي</option>
+        </select>
+        <button onclick="startQuiz()">ابدأ الاختبار</button>
+    </div>
+
+    <div class="card" id="quiz-div" style="display:none;">
+        <h2 id="q">جاري التحميل...</h2>
+        <div id="btns"></div>
+    </div>
+
+    <script>
+    let allData = [];
+    let currentFiltered = [];
+    let score = 0;
+
+    // رابط الأسئلة الخاص بك
+    const questionsApiUrl = 'https://script.google.com/macros/s/AKfycbyS44TrXA2zP7bc9PYM4lo5BO5cGNwv52_YSoAAs-zhHQ_SE2FWREUMRoSk5q42i3Lx9Q/exec';
+
+    fetch(questionsApiUrl)
+        .then(r => r.json())
+        .then(data => allData = data);
+
+    function startQuiz() {
+        const sub = document.getElementById('subject').value;
+        const grade = document.getElementById('grade').value;
+        
+        currentFiltered = allData.filter(item => item.المادة === sub && item.الصف === grade);
+        
+        if(currentFiltered.length === 0) { alert("لا توجد أسئلة لهذا الاختيار!"); return; }
+        
+        document.getElementById('selection-div').style.display = 'none';
+        document.getElementById('quiz-div').style.display = 'block';
+        showQuestion(0);
+    }
+
+    function showQuestion(index) {
+        if(index >= currentFiltered.length) {
+            sendResult(document.getElementById('studentName').value, score, currentFiltered.length);
+            return;
+        }
+        
+        const q = currentFiltered[index];
+        document.getElementById('q').innerText = q.السؤال;
+        const btnDiv = document.getElementById('btns');
+        btnDiv.innerHTML = '';
+        
+        const options = [q.الخيار1, q.الخيار2, q.الخيار3];
+        options.forEach(opt => {
+            const b = document.createElement('button');
+            b.innerText = opt;
+            b.onclick = () => {
+                if(opt === q.الاجابه) score++;
+                showQuestion(index + 1);
+            };
+            btnDiv.appendChild(b);
+        });
+    }
+
+    function sendResult(name, s, total) {
+        // رابط النتائج (Apps Script)
+        const url = "https://script.google.com/macros/s/AKfycbwr5KPoe5lzi7JULLkErWkxJk02KclOme3qlMCTBknl1MJTcKArMPV6wzYjnm6VXNC6/exec";
+        
+        // إرسال البيانات بطريقة no-cors لتجاوز مشكلة المتصفح
+        fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: name,
+                score: s + "/" + total,
+                subject: document.getElementById('subject').value
+            })
+        }).then(() => {
+            alert("تم تسجيل درجتك بنجاح!");
+            location.reload();
+        });
+    }
+    </script>
+</body>
+</html>
